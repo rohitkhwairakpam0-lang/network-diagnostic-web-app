@@ -48,10 +48,15 @@ def traceroute():
     result = run_traceroute(host)
     return jsonify({'output': result})
 
+from flask import jsonify
+
 @app.route('/speedtest')
 def speedtest_route():
-    result = run_speed_test()
-    return jsonify(result)
+    try:
+        result = run_speed_test()
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/info')
 def info():
@@ -66,3 +71,15 @@ def info():
 
 if __name__ == '__main__':
     app.run(debug=True)
+from flask import Flask
+import os
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Network Diagnostic Web App is running!"
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
