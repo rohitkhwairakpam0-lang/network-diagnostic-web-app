@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(to right, #e0f7fa, #d1f4ff);
+    color: #111827;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px);
+}
+
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    color: #0f172a;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
+}
+
+.card h2 {
+    color: #2563eb;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+}
+
+.card input[type="text"] {
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    background-color: #f9fafb;
+    transition: 0.2s ease-in-out;
+}
+
+.card input:focus {
+    border-color: #3b82f6;
+    background-color: #fff;
+    outline: none;
+}
+
+.card button {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    border: none;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card button:hover {
+    transform: scale(1.05);
+}
+
+.card pre {
+    background-color: #f1f5f9;
+    padding: 15px;
+    margin-top: 15px;
+    border-left: 5px solid #2563eb;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 250px;
+    font-size: 0.95rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+}

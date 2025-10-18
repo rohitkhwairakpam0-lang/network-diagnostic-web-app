@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-based Network Diagnostic and Monitoring Application</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+        
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tool-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .tool-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .tool-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .tool-card input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .tool-card input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .tool-card button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .tool-card button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .tool-card button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
+            margin-top: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            border-left: 4px solid #667eea;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-container pre {
+            white-space: pre-wrap;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            color: #333;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* About Section */
+        .about-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .about-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .feature-item i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .contact-info h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .contact-item i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Hidden sections */
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-network-wired"></i>
+                Web-based Network Diagnostic and Monitoring Application
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')" class="active">Home</a></li>
+                <li><a href="#" onclick="showSection('tools')">Tools</a></li>
+                <li><a href="#" onclick="showSection('about')">About</a></li>
+                <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Home Section -->
+            <div id="home" class="section active">
+                <div class="hero">
+                    <h1><i class="fas fa-globe"></i> "Web-based Network Diagnostic and Monitoring Application"</h1>
+                    <p>Professional network troubleshooting made simple. Test connectivity, trace routes, check speeds, and analyze your network performance - all from your browser.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn-primary" onclick="showSection('tools')">
+                            <i class="fas fa-tools"></i> Start Diagnostics
+                        </a>
+                        <a href="#" class="btn-secondary" onclick="showSection('about')">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <i class="fas fa-ping-pong-paddle-ball"></i>
+                        <h4>Ping Test</h4>
+                        <p>Check connectivity and latency to any host</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-route"></i>
+                        <h4>Traceroute</h4>
+                        <p>Trace the path packets take to reach destinations</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h4>Speed Test</h4>
+                        <p>Measure your internet download and upload speeds</p>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-info"></i>
+                        <h4>System Info</h4>
+                        <p>View local network configuration details</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Section -->
+            <div id="tools" class="section">
+                <div class="hero">
+                    <h1><i class="fas fa-tools"></i> Diagnostic Tools</h1>
+                    <p>Select a tool below to start diagnosing your network</p>
+                </div>
+
+                <div class="tools-grid">
+                    <!-- Ping Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-ping-pong-paddle-ball"></i>
+                        </div>
+                        <h3>Ping Test</h3>
+                        <p>Test connectivity and measure round-trip time to any host or IP address.</p>
+                        <input type="text" id="pingHost" placeholder="Enter hostname or IP (e.g., google.com)">
+                        <button onclick="runPing()">
+                            <i class="fas fa-play"></i> Run Ping Test
+                        </button>
+                        <div class="result-container">
+                            <pre id="pingResult">Enter a hostname and click "Run Ping Test" to see results...</pre>
+                        </div>
+                    </div>
+
+                    <!-- Traceroute Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3>Traceroute</h3>
+                        <p>Trace the network path and see all hops from your machine to the destination.</p>
+                        <input type="text" id="traceHost" placeholder="Enter hostname or IP (e.g., google.com)">
+                        <button onclick="runTraceroute()">
+                            <i class="fas fa-play"></i> Run Traceroute
+                        </button>
+                        <div class="result-container">
+                            <pre id="traceResult">Enter a hostname and click "Run Traceroute" to see results...</pre>
+                        </div>
+                    </div>
+
+                    <!-- Speed Test Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3>Speed Test</h3>
+                        <p>Measure your internet connection's download and upload speeds.</p>
+                        <button onclick="runSpeedTest()">
+                            <i class="fas fa-play"></i> Run Speed Test
+                        </button>
+                        <div class="result-container">
+                            <pre id="speedResult">Click "Run Speed Test" to measure your internet speed...</pre>
+                        </div>
+                    </div>
+
+                    <!-- System Info Tool -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3>System Information</h3>
+                        <p>View your local system's network configuration and details.</p>
+                        <button onclick="getInfo()">
+                            <i class="fas fa-info"></i> Get System Info
+                        </button>
+                        <div class="result-container">
+                            <pre id="infoResult">Click "Get System Info" to view your system details...</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div id="about" class="section">
+                <div class="about-section">
+                    <h2>About Web-based Network Diagnostic and Monitoring Application</h2>
+                    <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 3rem;">
+                        A comprehensive web-based platform for network troubleshooting and performance analysis, designed to make network diagnostics accessible to everyone.
+                    </p>
+
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-globe"></i>
+                            <h4>Cross-Platform</h4>
+                            <p>Works seamlessly across Windows, Linux, and macOS systems</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <h4>User-Friendly</h4>
+                            <p>Intuitive interface suitable for both beginners and professionals</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bolt"></i>
+                            <h4>Real-Time Results</h4>
+                            <p>Get immediate diagnostic feedback with live result updates</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Secure & Reliable</h4>
+                            <p>Built with modern security practices and reliable backend systems</p>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <h3 style="margin-bottom: 1rem;">Perfect For:</h3>
+                        <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; min-width: 150px;">
+                                <i class="fas fa-user-tie" style="color: #667eea; font-size: 1.5rem;"></i>
+                                <p><strong>Network Admins</strong></p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; min-width: 150px;">
+                                <i class="fas fa-graduation-cap" style="color: #667eea; font-size: 1.5rem;"></i>
+                                <p><strong>Students</strong></p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; min-width: 150px;">
+                                <i class="fas fa-home" style="color: #667eea; font-size: 1.5rem;"></i>
+                                <p><strong>Home Users</strong></p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; min-width: 150px;">
+                                <i class="fas fa-building" style="color: #667eea; font-size: 1.5rem;"></i>
+                                <p><strong>IT Support</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div id="contact" class="section">
+                <div class="contact-section">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">Contact & Support</h2>
+                    
+                    <div class="contact-grid">
+                        <div class="contact-info">
+                            <h3>Get in Touch</h3>
+                            <p style="color: #666; margin-bottom: 2rem;">
+                                Need help or have questions about Web-based Network Diagnostic and Monitoring Application? We're here to assist you.
+                            </p>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>khwairakpamrohit09@gmail.com</span>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+91 8259894407/9366469792</span>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>123 Tech, Ningthoukhong Bazar Bishnupur-795126</span>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Mon-Fri: 9AM-6PM EST</span>
+                            </div>
+                        </div>
+                        
+                        <div class="support-info">
+                            <h3>Documentation & Support</h3>
+                            <p style="color: #666; margin-bottom: 2rem;">
+                                Find answers to common questions and detailed guides.
+                            </p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <a href="#" class="btn-primary" style="text-align: center;">
+                                    <i class="fas fa-book"></i> View Documentation
+                                </a>
+                                <a href="#" class="btn-secondary" style="text-align: center; color: #667eea; border-color: #667eea;">
+                                    <i class="fab fa-github"></i> Repository
+                                </a>
+                                <a href="#" class="btn-secondary" style="text-align: center; color: #667eea; border-color: #667eea;">
+                                    <i class="fas fa-question-circle"></i> FAQ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Web-based Network Diagnostic and Monitoring Application. Built with ❤️ for network professionals and enthusiasts.</p>
+        <p style="margin-top: 0.5rem; opacity: 0.7;">Powered by Flask & Modern Web Technologies</p>
+    </footer>
+
+    <script>
+        // Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update nav links
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Diagnostic Functions
+        async function runPing() {
+            const host = document.getElementById('pingHost').value;
+            const resultElement = document.getElementById('pingResult');
+            const button = event.target;
+            
+            if (!host.trim()) {
+                resultElement.textContent = 'Please enter a hostname or IP address.';
+                return;
+            }
+            
+            button.innerHTML = '<div class="loading"></div> Running Ping Test...';
+            button.disabled = true;
+            resultElement.textContent = 'Running ping test...';
+            
+            try {
+                const res = await fetch('/ping', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `host=${encodeURIComponent(host)}`
+                });
+                const data = await res.json();
+                resultElement.textContent = data.output || 'No output received.';
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            } finally {
+                button.innerHTML = '<i class="fas fa-play"></i> Run Ping Test';
+                button.disabled = false;
+            }
+        }
+
+        async function runTraceroute() {
+            const host = document.getElementById('traceHost').value;
+            const resultElement = document.getElementById('traceResult');
+            const button = event.target;
+            
+            if (!host.trim()) {
+                resultElement.textContent = 'Please enter a hostname or IP address.';
+                return;
+            }
+            
+            button.innerHTML = '<div class="loading"></div> Running Traceroute...';
+            button.disabled = true;
+            resultElement.textContent = 'Running traceroute... This may take up to 30 seconds.';
+            
+            try {
+                const res = await fetch('/traceroute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `host=${encodeURIComponent(host)}`
+                });
+                const data = await res.json();
+                resultElement.textContent = data.output || 'No output received.';
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            } finally {
+                button.innerHTML = '<i class="fas fa-play"></i> Run Traceroute';
+                button.disabled = false;
+            }
+        }
+
+        async function runSpeedTest() {
+            const resultElement = document.getElementById('speedResult');
+            const button = event.target;
+            
+            button.innerHTML = '<div class="loading"></div> Testing Speed...';
+            button.disabled = true;
+            resultElement.textContent = 'Running speed test... This may take up to 60 seconds.';
+            
+            try {
+                const res = await fetch('/speedtest');
+                const data = await res.json();
+                resultElement.textContent = 
+                    `Download Speed: ${data.download_speed} Mbps\nUpload Speed: ${data.upload_speed} Mbps`;
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            } finally {
+                button.innerHTML = '<i class="fas fa-play"></i> Run Speed Test';
+                button.disabled = false;
+            }
+        }
+
+        async function getInfo() {
+            const resultElement = document.getElementById('infoResult');
+            const button = event.target;
+            
+            button.innerHTML = '<div class="loading"></div> Getting Info...';
+            button.disabled = true;
+            resultElement.textContent = 'Retrieving system information...';
+            
+            try {
+                const res = await fetch('/info');
+                const data = await res.json();
+                resultElement.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultElement.textContent = `Error: ${error.message}`;
+            } finally {
+                button.innerHTML = '<i class="fas fa-info"></i> Get System Info';
+                button.disabled = false;
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+            console.log('Network Diagnostic Pro - Ready!');
+        });
+    </script>
+</body>
+</html>
